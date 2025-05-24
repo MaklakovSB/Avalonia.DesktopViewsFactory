@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35506.116 d17.12
+VisualStudioVersion = 17.12.35506.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Avalonia.DesktopViewsFactory", "Avalonia.DesktopViewsFactory\Avalonia.DesktopViewsFactory.csproj", "{C0D1D00C-3268-4F75-A03F-5EC37F159614}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopAppSample", "DesktopAppSample\DesktopAppSample.csproj", "{7F596D63-D6E2-467A-847C-967F02D5F1A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{C0D1D00C-3268-4F75-A03F-5EC37F159614}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0D1D00C-3268-4F75-A03F-5EC37F159614}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0D1D00C-3268-4F75-A03F-5EC37F159614}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F596D63-D6E2-467A-847C-967F02D5F1A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F596D63-D6E2-467A-847C-967F02D5F1A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F596D63-D6E2-467A-847C-967F02D5F1A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F596D63-D6E2-467A-847C-967F02D5F1A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

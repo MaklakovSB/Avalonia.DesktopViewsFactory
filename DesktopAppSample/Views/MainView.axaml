@@ -1,0 +1,27 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        x:Class="DesktopAppSample.Views.MainView"
+        xmlns:vm="using:DesktopAppSample.ViewModels"
+        x:DataType="vm:MainViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="DesktopAppSample"
+        mc:Ignorable="d"
+        d:DesignWidth="800"
+        d:DesignHeight="450">
+    <Grid RowDefinitions="Auto,*">
+        <!-- Main menu -->
+        <Menu Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="3">
+            <MenuItem Header="Open modal widnows">
+                <MenuItem Header="Open ICloseable modal QuestionBox"
+                            Command="{Binding OpenQuestionBoxCommand}"/>
+                <MenuItem Header="Open Open non ICloseable modal window"
+                            Command="{Binding OpenNonICloseableModalCommand}"/>
+
+            </MenuItem>
+        </Menu>
+    </Grid>
+</Window>

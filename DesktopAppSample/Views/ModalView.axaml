@@ -1,0 +1,24 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        x:Class="DesktopAppSample.Views.ModalView"
+        xmlns:vm="using:DesktopAppSample.ViewModels"
+        x:DataType="vm:ModalViewModel"
+        SizeToContent="WidthAndHeight"
+        ShowInTaskbar="False"
+        CanResize="False"
+        Title="{Binding Title}"
+        MinWidth="260"
+        MaxWidth="400"
+        d:DesignWidth="80"
+        d:DesignHeight="45"
+        mc:Ignorable="d">
+    <Grid>
+        <Button
+            Height="32"
+            Margin="10"
+            Content="Закрыть"
+            Command="{Binding ViewModelCloseCommand}"/>
+    </Grid>
+</Window>
