@@ -2,10 +2,8 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.DesktopViewsFactory.Attributes;
 using Avalonia.DesktopViewsFactory.Interfaces;
-using Avalonia.Threading;
 using ReactiveUI;
 
 namespace Avalonia.DesktopViewsFactory.Factorys
@@ -202,15 +200,12 @@ namespace Avalonia.DesktopViewsFactory.Factorys
         /// <returns>Созданное окно.</returns>
         private Window CreateView(ReactiveObject viewModel)
         {
-            lock (_syncRoot)
-            {
-                var viewType = GetViewType(viewModel);
-                var view = Activator.CreateInstance(viewType) as Window
-                    ?? throw new InvalidOperationException($"Failed to create {viewType.Name}");
+            var viewType = GetViewType(viewModel);
+            var view = Activator.CreateInstance(viewType) as Window
+                ?? throw new InvalidOperationException($"Failed to create {viewType.Name}");
 
-                view.DataContext = viewModel;
-                return view;
-            }
+            view.DataContext = viewModel;
+            return view;
         }
 
         /// <summary>
@@ -221,35 +216,32 @@ namespace Avalonia.DesktopViewsFactory.Factorys
         /// <exception cref="TypeLoadException">Если тип представления не найден.</exception>
         private Type GetViewType(ReactiveObject viewModel)
         {
-            lock (_syncRoot)
-            {
-                var viewModelType = viewModel.GetType();
+            var viewModelType = viewModel.GetType();
 
-                // 1. Проверка кэша.
-                if (_viewTypeCache.TryGetValue(viewModelType, out var cachedType))
-                    return cachedType;
+            // 1. Проверка кэша.
+            if (_viewTypeCache.TryGetValue(viewModelType, out var cachedType))
+                return cachedType;
 
-                // 2. Поиск через атрибут.
-                var viewType = AppDomain.CurrentDomain.GetAssemblies()
-                    .SelectMany(a => a.GetTypes())
-                    .FirstOrDefault(t =>
-                        t.GetCustomAttribute<ViewForAttribute>()?.ViewModelType == viewModelType
-                        && t.IsSubclassOf(typeof(Window)));
+            // 2. Поиск через атрибут.
+            var viewType = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => a.GetTypes())
+                .FirstOrDefault(t =>
+                    t.GetCustomAttribute<ViewForAttribute>()?.ViewModelType == viewModelType
+                    && t.IsSubclassOf(typeof(Window)));
 
-                // 3. Fallback на соглашение имён.
-                viewType ??= Assembly.GetAssembly(viewModelType)?
-                    .GetType(viewModelType.FullName!.Replace("ViewModel", "View"));
+            // 3. Fallback на соглашение имён.
+            viewType ??= Assembly.GetAssembly(viewModelType)?
+                .GetType(viewModelType.FullName!.Replace("ViewModel", "View"));
 
-                if (viewType == null)
-                    throw new TypeLoadException(
-                        $"View for {viewModelType.Name} not found. " +
-                        $"Add [ViewFor(typeof({viewModelType.Name}))] to View " +
-                        $"or follow naming convention.");
+            if (viewType == null)
+                throw new TypeLoadException(
+                    $"View for {viewModelType.Name} not found. " +
+                    $"Add [ViewFor(typeof({viewModelType.Name}))] to View " +
+                    $"or follow naming convention.");
 
-                // 4. Кэширование.
-                _viewTypeCache[viewModelType] = viewType;
-                return viewType;
-            }
+            // 4. Кэширование.
+            _viewTypeCache[viewModelType] = viewType;
+            return viewType;
         }
 
         /// <summary>
@@ -259,33 +251,31 @@ namespace Avalonia.DesktopViewsFactory.Factorys
         /// <param name="window">Окно для очистки.</param>
         private void DestroyWindow(ReactiveObject viewModel, Window window)
         {
-            lock (_syncRoot)
+
+            // 1. Проверяем, существует ли связь ViewModel → Window.
+            if (!_views.TryGetValue(viewModel, out var existingWindow) || existingWindow != window)
+                return; // Окно уже уничтожено или ViewModel не связана.
+
+            // 2. Удаляем обработчик закрытия окна.
+            if (_windowClosedHandlers.TryGetValue(window, out var handler))
             {
-                // 1. Проверяем, существует ли связь ViewModel → Window.
-                if (!_views.TryGetValue(viewModel, out var existingWindow) || existingWindow != window)
-                    return; // Окно уже уничтожено или ViewModel не связана.
-
-                // 2. Удаляем обработчик закрытия окна.
-                if (_windowClosedHandlers.TryGetValue(window, out var handler))
-                {
-                    window.Closed -= handler;
-                    _windowClosedHandlers.Remove(window);
-                }
-
-                // 3. Удаляем ViewModel из ConditionalWeakTable.
-                _views.Remove(viewModel);
-
-                // 4. Освобождаем ресурсы ViewModel.
-                if (viewModel is IDisposable disposable)
-                {
-                    disposable.Dispose();
-                }
-
-                // 5. Отвязываем DataContext.
-                window.DataContext = null;
-
-                Debug.WriteLine($"Метод DestroyWindow завершил уничтожение окна {window.GetType().Name}.");
+                window.Closed -= handler;
+                _windowClosedHandlers.Remove(window);
             }
+
+            // 3. Удаляем ViewModel из ConditionalWeakTable.
+            _views.Remove(viewModel);
+
+            // 4. Освобождаем ресурсы ViewModel.
+            if (viewModel is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+
+            // 5. Отвязываем DataContext.
+            window.DataContext = null;
+
+            Debug.WriteLine($"Метод DestroyWindow завершил уничтожение окна {window.GetType().Name}.");
 
 #if DEBUG
             // Решение для удобства профилирования.
@@ -335,11 +325,9 @@ namespace Avalonia.DesktopViewsFactory.Factorys
                 }
 
                 _windowClosedHandlers.Clear();
+                _isDisposed = true;
+                Debug.WriteLine($"Метод Dispose завершён для {nameof(DesktopViewsFactory)}.");
             }
-
-            _isDisposed = true;
-
-            Debug.WriteLine($"Метод Dispose завершён для {nameof(DesktopViewsFactory)}.");
         }
     }
 }

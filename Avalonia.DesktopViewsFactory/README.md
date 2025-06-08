@@ -5,7 +5,7 @@ DesktopViewsFactory is a lightweight, thread-safe factory for managing windows a
 ## Requirements
 
 - .NET 6.0 Desktop Runtime.
-- AvaloniaUI 11.0.3.
+- AvaloniaUI 11.3.0.
 
 ## Features
 
