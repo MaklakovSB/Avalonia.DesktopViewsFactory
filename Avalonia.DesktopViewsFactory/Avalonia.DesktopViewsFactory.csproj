@@ -8,14 +8,14 @@
     <RootNamespace>Avalonia.DesktopViewsFactory</RootNamespace>
     <PackageId>Avalonia.DesktopViewsFactory</PackageId>
     <Title>Avalonia.DesktopViewsFactory</Title>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <Authors>$(AssemblyName),</Authors>
     <Copyright>Maklakov Sergey</Copyright>
     <PackageProjectUrl>https://github.com/MaklakovSB/Avalonia.DesktopViewsFactory</PackageProjectUrl>
     <RepositoryUrl>https://github.com/MaklakovSB/Avalonia.DesktopViewsFactory</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <AssemblyVersion>1.0.3</AssemblyVersion>
-    <FileVersion>1.0.3</FileVersion>
+    <AssemblyVersion>1.0.4</AssemblyVersion>
+    <FileVersion>1.0.4</FileVersion>
     <Description>Avalonia.DesktopViewsFactory for .NET 6.0 and AvaloniaUI 11.0.3.</Description>
     <PackageTags>Avalonia; MVVM; DesktopViewsFactory; net6.0</PackageTags>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
